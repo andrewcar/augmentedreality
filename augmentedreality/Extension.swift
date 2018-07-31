@@ -33,6 +33,7 @@ struct DeviceType {
 }
 
 extension UIColor {
+    
     convenience init(red: Int, green: Int, blue: Int) {
         let newRed = CGFloat(red)/255
         let newGreen = CGFloat(green)/255
@@ -43,10 +44,17 @@ extension UIColor {
 }
 
 public extension Float {
+    
     public static func random() -> Float {
         return Float(Float(arc4random()) / 0xFFFFFFFF)
     }
+    
     public static func random(_ min: Float, max: Float) -> Float {
         return Float.random() * (max - min) + min
     }
 }
+
+extension Int {
+    var degreesToRadians: Double { return Double(self) * .pi/180 }
+}
+

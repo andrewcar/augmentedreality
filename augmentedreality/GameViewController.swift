@@ -9,7 +9,7 @@
 import ARKit
 import LBTAComponents
 
-class GameViewController: UIViewController {
+class GameViewController: UIViewController, ARSCNViewDelegate {
     
     let arView: ARSCNView = {
         let view = ARSCNView()
@@ -74,10 +74,12 @@ class GameViewController: UIViewController {
         
         setupViews()
         
+        configuration.planeDetection = .horizontal
         arView.session.run(configuration, options: [])
         arView.debugOptions = [ARSCNDebugOptions.showFeaturePoints,
                                ARSCNDebugOptions.showWorldOrigin]
         arView.autoenablesDefaultLighting = true
+        arView.delegate = self
     }
     
     override var prefersStatusBarHidden: Bool {
@@ -126,5 +128,20 @@ class GameViewController: UIViewController {
             }
         }
         arView.session.run(configuration, options: [.removeExistingAnchors, .resetTracking])
+    }
+    
+    func renderer(_ renderer: SCNSceneRenderer, didAdd node: SCNNode, for anchor: ARAnchor) {
+        guard let anchorPlane = anchor as? ARPlaneAnchor else { return }
+        print("New anchor plane found with extent: ", anchorPlane.extent)
+    }
+    
+    func renderer(_ renderer: SCNSceneRenderer, didUpdate node: SCNNode, for anchor: ARAnchor) {
+        guard let anchorPlane = anchor as? ARPlaneAnchor else { return }
+        print("Anchor plane updated with extent: ", anchorPlane.extent)
+    }
+    
+    func renderer(_ renderer: SCNSceneRenderer, didRemove node: SCNNode, for anchor: ARAnchor) {
+        guard let anchorPlane = anchor as? ARPlaneAnchor else { return }
+        print("Anchor plane removed with extent: ", anchorPlane.extent)
     }
 }

@@ -21,7 +21,7 @@ class GameViewController: UIViewController {
     lazy var plusButton: UIButton = {
         let button = UIButton(type: .system)
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.setImage(UIImage(named: "plus")?.withRenderingMode(.alwaysTemplate), for: .normal)
+        button.setImage(#imageLiteral(resourceName: "plus").withRenderingMode(.alwaysTemplate), for: .normal)
         button.tintColor = UIColor(red: 230, green: 145, blue: 31)
         button.layer.cornerRadius = plusButtonWidth * 0.5
         button.layer.masksToBounds = true
@@ -33,6 +33,7 @@ class GameViewController: UIViewController {
     
     @objc func handlePlusButtonTapped() {
         print("tap")
+        addBox()
     }
     
     let configuration = ARWorldTrackingConfiguration()
@@ -45,6 +46,7 @@ class GameViewController: UIViewController {
         arView.session.run(configuration, options: [])
         arView.debugOptions = [ARSCNDebugOptions.showFeaturePoints,
                                ARSCNDebugOptions.showWorldOrigin]
+        arView.autoenablesDefaultLighting = true
     }
     
     override var prefersStatusBarHidden: Bool {
@@ -57,5 +59,13 @@ class GameViewController: UIViewController {
         
         view.addSubview(plusButton)
         plusButton.anchor(nil, left: view.safeAreaLayoutGuide.leftAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor, right: nil, topConstant: 0, leftConstant: 24, bottomConstant: 12, rightConstant: 0, widthConstant: plusButtonWidth, heightConstant: plusButtonWidth)
+    }
+    
+    func addBox() {
+        let boxNode = SCNNode()
+        boxNode.geometry = SCNBox(width: 0.05, height: 0.05, length: 0.05, chamferRadius: 0.0002)
+        boxNode.geometry?.firstMaterial?.diffuse.contents = #imageLiteral(resourceName: "wood")
+        boxNode.position = SCNVector3(0,0,-0.3)
+        arView.scene.rootNode.addChildNode(boxNode)
     }
 }
